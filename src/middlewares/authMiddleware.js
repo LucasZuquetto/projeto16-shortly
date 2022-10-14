@@ -11,12 +11,7 @@ async function postSignUpMiddleware(req, res, next) {
       confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
    });
 
-   const validate = authSchema.validate(userData, { abortEarly: false });
-   if (validate.error) {
-      console.error(validate.error.details.map((detail) => detail.message));
-      res.sendStatus(422);
-      return;
-   }
+   validateObject(authSchema, userData, res);
 
    try {
       const emailExists = (
@@ -33,8 +28,30 @@ async function postSignUpMiddleware(req, res, next) {
       res.sendStatus(500);
       return;
    }
-   
+
    next();
 }
 
-export { postSignUpMiddleware };
+async function postSignInMiddleware(req, res, next) {
+   const loginData = req.body;
+
+   const loginSchema = Joi.object({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+   });
+
+   validateObject(loginSchema, loginData, res);
+
+   next();
+}
+
+function validateObject(schema, object, res) {
+   const validate = schema.validate(object, { abortEarly: false });
+   if (validate.error) {
+      console.error(validate.error.details.map((detail) => detail.message));
+      res.sendStatus(422);
+      return;
+   }
+}
+
+export { postSignUpMiddleware, postSignInMiddleware };
