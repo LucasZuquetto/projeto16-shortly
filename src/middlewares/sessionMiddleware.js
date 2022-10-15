@@ -12,7 +12,7 @@ export default async function validateAuthToken(req, res, next) {
    try {
       const sessionIsValid = (
          await connection.query(
-            "SELECT token FROM sessions WHERE token = ($1)",
+            "SELECT * FROM sessions WHERE token = ($1)",
             [token]
          )
       ).rows[0];
@@ -20,6 +20,7 @@ export default async function validateAuthToken(req, res, next) {
          res.sendStatus(401);
          return;
       }
+      res.locals.user = sessionIsValid
    } catch (error) {
       console.log(error.message);
       res.sendStatus(500);
