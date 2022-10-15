@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { connection } from "../database/db.js";
+import { validateObject } from "./middlewareHelper.js";
 
 async function postSignUpMiddleware(req, res, next) {
    const userData = req.body;
@@ -43,15 +44,6 @@ async function postSignInMiddleware(req, res, next) {
    validateObject(loginSchema, loginData, res);
 
    next();
-}
-
-function validateObject(schema, object, res) {
-   const validate = schema.validate(object, { abortEarly: false });
-   if (validate.error) {
-      console.error(validate.error.details.map((detail) => detail.message));
-      res.sendStatus(422);
-      return;
-   }
 }
 
 export { postSignUpMiddleware, postSignInMiddleware };
