@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    deleteUrlController,
    getUrlByIdController,
    openShortUrlController,
    postShortenUrl,
@@ -7,8 +8,9 @@ import {
 import validateAuthToken from "../middlewares/sessionMiddleware.js";
 import {
    shortenMiddleware,
-   getUrlByIdMiddleware,
+   validateUrlById,
    openShortUrlMiddleware,
+   deleteUrlMiddleware,
 } from "../middlewares/urlsMiddleware.js";
 
 const urlsRouter = Router();
@@ -19,7 +21,12 @@ urlsRouter.post(
    shortenMiddleware,
    postShortenUrl
 );
-urlsRouter.get("/urls/:id", getUrlByIdMiddleware, getUrlByIdController);
-urlsRouter.get("/urls/open/:shortUrl",openShortUrlMiddleware,openShortUrlController);
+urlsRouter.get("/urls/:id", validateUrlById, getUrlByIdController);
+urlsRouter.get(
+   "/urls/open/:shortUrl",
+   openShortUrlMiddleware,
+   openShortUrlController
+);
+urlsRouter.delete('/urls/:id',validateAuthToken,validateUrlById,deleteUrlMiddleware,deleteUrlController)
 
 export default urlsRouter;
