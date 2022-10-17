@@ -12,18 +12,20 @@ async function postShortenUrl(req, res) {
          [url, shortUrl, user.userId]
       );
       res.sendStatus(201);
+      return;
    } catch (error) {
       console.log(error.message);
       res.sendStatus(500);
+      return;
    }
 }
 
 async function getUrlByIdController(req, res) {
    const { urlObject } = res.locals;
    res.status(200).send({
-      id:urlObject.id,
-      shortUrl:urlObject.shortUrl,
-      url:urlObject.url
+      id: urlObject.id,
+      shortUrl: urlObject.shortUrl,
+      url: urlObject.url,
    });
 }
 
@@ -31,27 +33,36 @@ async function openShortUrlController(req, res) {
    const { shortUrl } = req.params;
    const { urlObject } = res.locals;
    try {
-      res.redirect(urlObject.url);
       await connection.query(
          'UPDATE urls SET "visitCount" = "visitCount" + 1 WHERE "shortUrl" = ($1);',
          [shortUrl]
       );
-      res.sendStatus(200);
+      res.redirect(urlObject.url);
    } catch (error) {
       console.log(error.message);
       res.sendStatus(500);
+      return;
    }
 }
 
-async function deleteUrlController(req,res){
-   const {urlObject} = res.locals
+async function deleteUrlController(req, res) {
+   const { urlObject } = res.locals;
    try {
-      await connection.query('DELETE FROM urls WHERE id = ($1);',[urlObject.id])
-      res.sendStatus(204)
+      await connection.query("DELETE FROM urls WHERE id = ($1);", [
+         urlObject.id,
+      ]);
+      res.sendStatus(204);
+      return;
    } catch (error) {
-      console.log(error.message)
-      res.sendStatus(500)
+      console.log(error.message);
+      res.sendStatus(500);
+      return;
    }
 }
 
-export { postShortenUrl, getUrlByIdController, openShortUrlController,deleteUrlController };
+export {
+   postShortenUrl,
+   getUrlByIdController,
+   openShortUrlController,
+   deleteUrlController,
+};

@@ -3,12 +3,16 @@ import { connection } from "../database/db.js";
 export default async function usersInfoController(req, res) {
    const { user } = res.locals;
    try {
-      const { visitCount } = (
+      let { visitCount } = (
          await connection.query(
             'SELECT sum("visitCount") AS "visitCount" FROM urls WHERE "userId"=($1);',
             [user.userId]
          )
       ).rows[0];
+
+      if(visitCount === null){
+        visitCount = 0
+      }
 
       const { name } = (
          await connection.query('SELECT name FROM users WHERE "id" = ($1);', [
