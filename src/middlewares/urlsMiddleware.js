@@ -18,10 +18,7 @@ async function validateUrlById(req, res, next) {
    const { id } = req.params;
    try {
       const urlExists = (
-         await connection.query(
-            'SELECT  * FROM urls WHERE id = ($1);',
-            [id]
-         )
+         await connection.query("SELECT  * FROM urls WHERE id = ($1);", [id])
       ).rows[0];
       if (!urlExists) {
          res.sendStatus(404);
@@ -58,16 +55,21 @@ async function openShortUrlMiddleware(req, res, next) {
    next();
 }
 
-async function deleteUrlMiddleware(req,res,next){
-    const {urlObject} = res.locals
-    const {user} = res.locals
-    
-    if (urlObject.userId !== user.userId) {
-        res.sendStatus(401)
-        return
-    }
+async function deleteUrlMiddleware(req, res, next) {
+   const { urlObject } = res.locals;
+   const { user } = res.locals;
 
-    next()
+   if (urlObject.userId !== user.userId) {
+      res.sendStatus(401);
+      return;
+   }
+
+   next();
 }
 
-export { shortenMiddleware, validateUrlById, openShortUrlMiddleware,deleteUrlMiddleware };
+export {
+   shortenMiddleware,
+   validateUrlById,
+   openShortUrlMiddleware,
+   deleteUrlMiddleware,
+};

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-    deleteUrlController,
+   deleteUrlController,
    getUrlByIdController,
    openShortUrlController,
    postShortenUrl,
@@ -27,6 +27,12 @@ urlsRouter.get(
    openShortUrlMiddleware,
    openShortUrlController
 );
-urlsRouter.delete('/urls/:id',validateAuthToken,validateUrlById,deleteUrlMiddleware,deleteUrlController)
+urlsRouter.delete(
+   "/urls/:id",
+   validateAuthToken,
+   validateUrlById,
+   deleteUrlMiddleware,
+   deleteUrlController
+);
 
 export default urlsRouter;

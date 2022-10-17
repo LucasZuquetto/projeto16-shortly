@@ -10,8 +10,8 @@ export default async function usersInfoController(req, res) {
          )
       ).rows[0];
 
-      if(visitCount === null){
-        visitCount = 0
+      if (visitCount === null) {
+         visitCount = 0;
       }
 
       const { name } = (
